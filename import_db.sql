@@ -57,6 +57,11 @@ VALUES
   (1,2), (1,2), (3,1), (4,1), (4,2);
 
 INSERT INTO
+  question_likes (user_id, question_id)
+VALUES
+  (1,2), (1,1), (3,1), (4,1), (4,2);
+
+INSERT INTO
   replies (subject_question_id, parent_reply_id, user_id, body)
 VALUES
   (1, 1, 1, "What a stupid question.");
