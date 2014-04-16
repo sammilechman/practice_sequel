@@ -70,6 +70,7 @@ class User
       (?, ?)
     SQL
     @id = QuestionsDatabase.instance.last_insert_row_id
+
   end
 
   def update
