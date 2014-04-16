@@ -52,10 +52,18 @@ class User
     @lname = options["lname"]
   end
 
+  def save
+    if self.id.nil?
+      self.create
+    else
+      self.update
+    end
+  end
+
   def create
     raise "Already saved!" unless self.id.nil?
 
-    QuestionsDatabase.instance.execute(<<-SQL, fname, lname)
+    QuestionsDatabase.instance.execute(<<-SQL, self.fname, self.lname)
     INSERT INTO
       users(fname, lname)
     VALUES
@@ -64,20 +72,32 @@ class User
     @id = QuestionsDatabase.instance.last_insert_row_id
   end
 
-  # def average_karma(@id)
-  #   results = QuestionsDatabase.instance.execute(<<-SQL, id)
-  #   SELECT
-  #
-  #   FROM
-  #     question q
-  #   LEFT OUTER JOIN
-  #     question_likes ql
-  #   ON
-  #     (ql.question_id = q.id)
-  #   WHERE
-  #     ql.user_id = ?
-  #   SQL
-  # end
+  def update
+    QuestionsDatabase.instance.execute(<<-SQL, id: self.id, fname: self.fname, lname: self.lname)
+    UPDATE
+      users
+    SET
+      fname = :fname, lname = :lname
+    WHERE
+      users.id = :id
+    SQL
+  end
+
+  def average_karma
+    results = QuestionsDatabase.instance.execute(<<-SQL, author_id: self.id)
+    SELECT
+      COUNT(ql.question_id)/CAST(COUNT(DISTINCT(q.id)) AS FLOAT) "Avg Num Likes"
+    FROM
+      questions q
+    LEFT OUTER JOIN
+      question_likes ql
+    ON
+      (ql.question_id = q.id)
+    WHERE
+      :author_id = q.associated_author_id
+    SQL
+    results.first
+  end
 
   def followed_questions
     QuestionFollower.followed_questions_for_user_id(@id)

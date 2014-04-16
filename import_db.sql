@@ -49,6 +49,7 @@ INSERT INTO
   questions (title, body, associated_author_id)
 VALUES
 ("How do I type with two hands?", "I'm having trouble typing with two hands, how do I do it?", 4),
+("What's my second question?", "Whaaaa?", 4),
 ("What's your favorite pie?", "I love pumpkin pies, what is your favorite?", 3);
 
 INSERT INTO
@@ -59,7 +60,7 @@ VALUES
 INSERT INTO
   question_likes (user_id, question_id)
 VALUES
-  (1,2), (1,1), (3,1), (4,1), (4,2);
+  (1,3), (1,1), (3,1), (4,1), (4,3);
 
 INSERT INTO
   replies (subject_question_id, parent_reply_id, user_id, body)
